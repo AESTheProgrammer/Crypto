@@ -35,8 +35,7 @@ def encryptSave():
         for item in encryptedCodes:
             encryptedString += str(item) + " "
 
-        for code in encryptedCodes:
-            file.write(encryptedString)
+        file.write(encryptedString)
 
         myLabel.config(text=encryptedString)
 
@@ -54,10 +53,11 @@ def decryptSave():
         string = textBox.get(1.0, END)
         file = open("Doc.txt", "w")
         stringList = string.split(' ')
+        del stringList[len(stringList) - 1]
         print(stringList)
 
-        for number in range(len(stringList)):
-            decryptedStrings += chr(round(math.pow(10, float(number))))
+        for item in stringList:
+            decryptedStrings += chr(round(math.pow(10, float(item))))
 
         for char in decryptedStrings:
             file.write(char)
