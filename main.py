@@ -1,15 +1,26 @@
 from tkinter import *
 from tkinter import messagebox
+from tkinter import ttk
 import math
 
 # display setting
 root = Tk()
 root.title("Doc Keeper")
-root.geometry("600x600")
+root.geometry("650x620")
 
+# a note book
+Notebook = ttk.Notebook(root)
+Notebook.pack()
 
+mainFrame = Frame(Notebook, width=500, height=500)
+algoFrame = Frame(Notebook, width=500, height=500) 
+
+mainFrame.pack(fill="both", expand=1)
+algoFrame.pack(fill="both", expand=1)
+
+Notebook.add(mainFrame, text="main menu")
+Notebook.add(algoFrame, text="algos.")
 # textbox
-
 # clean textbox
 def clear():
     """clean the whole textbox"""
@@ -19,7 +30,7 @@ def clear():
 # get text from textbox
 encryptedCodes = []
 
-
+algoLevel = 2
 def encryptSave():
     response = messagebox.askyesno("Doc Keeper", "are you sure you want to encrypt yet?")
 
@@ -36,8 +47,6 @@ def encryptSave():
             encryptedString += str(item) + " "
 
         file.write(encryptedString)
-
-        myLabel.config(text=encryptedString)
 
     else:
         return None
@@ -62,16 +71,14 @@ def decryptSave():
         for char in decryptedStrings:
             file.write(char)
 
-        myLabel.config(text=decryptedStrings)
-
     else:
         return None
 
 
-textBox = Text(root, height=21, width=60, font=("Helvetica", 18))
+textBox = Text(mainFrame, height=21, width=60, font=("Helvetica", 18))
 textBox.pack()
 
-button_frame = Frame(root)
+button_frame = Frame(mainFrame)
 button_frame.pack()
 
 clearButton = Button(button_frame, text="clear", command=clear)
@@ -82,7 +89,33 @@ encryptButton.grid(row=0, column=1, padx=20)
 decryptButton = Button(button_frame, text="Decrypt and Save", command=decryptSave)
 decryptButton.grid(row=0, column=2, padx=20)
 
-myLabel = Label(root, text='')
-myLabel.pack(pady=20)
+# implementing algo. frame
+ifTrueAES = IntVar()
+ifTrueDES = IntVar()
+ifTrueRSA = IntVar()
+
+def reset23():
+    algoLevel = 2
+    checkBox2.deselect()
+    checkBox3.deselect()
+
+def reset21():
+    algoLevel = 1
+    checkBox2.deselect()
+    checkBox1.deselect()
+
+def reset31():
+    algoLevel = 3
+    checkBox3.deselect()
+    checkBox1.deselect()
+
+checkBox1 = Checkbutton(algoFrame, text="AES(security level: 2)", command=reset23, variable=ifTrueAES)
+checkBox2 = Checkbutton(algoFrame, text="DES(security level: 3)", command=reset31, variable=ifTrueDES)
+checkBox3 = Checkbutton(algoFrame, text="RSA(security level: 1)", command=reset21, variable=ifTrueRSA)
+checkBox1.select()
+
+checkBox2.pack()
+checkBox1.pack()
+checkBox3.pack()
 
 root.mainloop()
