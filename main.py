@@ -7,7 +7,7 @@ import logging
 
 # logging setting
 logging.basicConfig(filename='log.log', level=logging.INFO,
-                    format='%(levelname)s:%(message)s')
+                    format='%(asctime)s:%(levelname)s:%(message)s')
 
 # display setting
 root = Tk()
@@ -127,19 +127,19 @@ ifTrueRSA = IntVar()
 
 
 def reset23():
-    logging.info("changed the algorithm to AES")
+    logging.info("switched the algorithm to AES")
     checkBox2.deselect()
     checkBox3.deselect()
 
 
 def reset21():
-    logging.info("changed the algorithm to RSA")
+    logging.info("switched the algorithm to RSA")
     checkBox2.deselect()
     checkBox1.deselect()
 
 
 def reset31():
-    logging.info("changed the algorithm to DES")
+    logging.info("switched the algorithm to DES")
     checkBox3.deselect()
     checkBox1.deselect()
 
