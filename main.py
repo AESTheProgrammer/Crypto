@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 from tkinter import ttk
 import math
+import logging
 
 # display setting
 root = Tk()
@@ -38,9 +39,18 @@ def encryptSave():
         messagebox.showinfo("Doc Keeper", "Done!")
         string = textBox.get(1.0, END)
         file = open("Doc.txt", "w")
+        print(ifTrueDES.get())
+        if ifTrueRSA.get():
+            for i in range(len(string)):
+                encryptedCodes.append(ord(string[i])*3+1)
 
-        for i in range(len(string)):
-            encryptedCodes.append(math.log10(ord(string[i])))
+        if ifTrueAES.get():
+            for i in range(len(string)):
+                encryptedCodes.append(1 + 3*math.log10(ord(string[i])))
+
+        if ifTrueDES.get():
+            for i in range(len(string)):
+                encryptedCodes.append(31+3*math.sinh(-7 + 13 * math.log(ord(string[i]), 13)))
 
         encryptedString = ""
         for item in encryptedCodes:
@@ -54,7 +64,7 @@ def encryptSave():
 
 def decryptSave():
     decryptedStrings = ""
-    response = messagebox.askyesno("Doc Keeper", "are you sure you want to encrypt yet?")
+    response = messagebox.askyesno("Doc Keeper", "are you sure you want to decrypt yet?")
     file = open("Doc.txt", "w")
 
     if response == 1:
@@ -63,10 +73,21 @@ def decryptSave():
         file = open("Doc.txt", "w")
         stringList = string.split(' ')
         del stringList[len(stringList) - 1]
-        print(stringList)
 
-        for item in stringList:
-            decryptedStrings += chr(round(math.pow(10, float(item))))
+        if ifTrueRSA.get():
+            for item in stringList:
+                decryptedStrings += chr(round((float)(int(item)-1)/3.0))
+
+        if ifTrueAES.get():
+            for item in stringList:
+                temp = round(math.pow(10, ((float(item)-1.0)/3.0)))
+                decryptedStrings += chr(temp)
+        
+        if ifTrueDES.get():
+            for item in stringList:
+                temp = round(math.pow(13, ((float)(math.asinh((float(item) - 31.0)/3.0) + 7.0)/13.0)))
+                decryptedStrings +=chr(int(temp))
+                print(temp)
 
         for char in decryptedStrings:
             file.write(char)
@@ -95,17 +116,14 @@ ifTrueDES = IntVar()
 ifTrueRSA = IntVar()
 
 def reset23():
-    algoLevel = 2
     checkBox2.deselect()
     checkBox3.deselect()
 
 def reset21():
-    algoLevel = 1
     checkBox2.deselect()
     checkBox1.deselect()
 
 def reset31():
-    algoLevel = 3
     checkBox3.deselect()
     checkBox1.deselect()
 
