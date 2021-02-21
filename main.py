@@ -4,6 +4,11 @@ from tkinter import ttk
 import math
 import logging
 
+
+# logging setting
+logging.basicConfig(filename='log.log', level=logging.INFO,
+                    format='%(levelname)s:%(message)s')
+
 # display setting
 root = Tk()
 root.title("Doc Keeper")
@@ -14,43 +19,48 @@ Notebook = ttk.Notebook(root)
 Notebook.pack()
 
 mainFrame = Frame(Notebook, width=500, height=500)
-algoFrame = Frame(Notebook, width=500, height=500) 
+algoFrame = Frame(Notebook, width=500, height=500)
 
 mainFrame.pack(fill="both", expand=1)
 algoFrame.pack(fill="both", expand=1)
 
 Notebook.add(mainFrame, text="main menu")
 Notebook.add(algoFrame, text="algos.")
+
+
 # textbox
 # clean textbox
 def clear():
     """clean the whole textbox"""
     textBox.delete(1.0, END)
+    logging.info("cleared the text box")
 
 
 # get text from textbox
 encryptedCodes = []
 
 algoLevel = 2
-def encryptSave():
-    response = messagebox.askyesno("Doc Keeper", "are you sure you want to encrypt yet?")
 
+
+def encryptSave():
+    logging.info("encrypted")
+    response = messagebox.askyesno("Doc Keeper", "are you sure you want to encrypt yet?")
     if response == 1:
         messagebox.showinfo("Doc Keeper", "Done!")
         string = textBox.get(1.0, END)
         file = open("Doc.txt", "w")
-        print(ifTrueDES.get())
+
         if ifTrueRSA.get():
             for i in range(len(string)):
-                encryptedCodes.append(ord(string[i])*3+1)
+                encryptedCodes.append(ord(string[i]) * 3 + 1)
 
         if ifTrueAES.get():
             for i in range(len(string)):
-                encryptedCodes.append(1 + 3*math.log10(ord(string[i])))
+                encryptedCodes.append(1 + 3 * math.log10(ord(string[i])))
 
         if ifTrueDES.get():
             for i in range(len(string)):
-                encryptedCodes.append(31+3*math.sinh(-7 + 13 * math.log(ord(string[i]), 13)))
+                encryptedCodes.append(31 + 3 * math.sinh(-7 + 13 * math.log(ord(string[i]), 13)))
 
         encryptedString = ""
         for item in encryptedCodes:
@@ -63,6 +73,7 @@ def encryptSave():
 
 
 def decryptSave():
+    logging.info("decrypted")
     decryptedStrings = ""
     response = messagebox.askyesno("Doc Keeper", "are you sure you want to decrypt yet?")
     file = open("Doc.txt", "w")
@@ -76,18 +87,17 @@ def decryptSave():
 
         if ifTrueRSA.get():
             for item in stringList:
-                decryptedStrings += chr(round((float)(int(item)-1)/3.0))
+                decryptedStrings += chr(round(float(int(item) - 1) / 3.0))
 
         if ifTrueAES.get():
             for item in stringList:
-                temp = round(math.pow(10, ((float(item)-1.0)/3.0)))
+                temp = round(math.pow(10, ((float(item) - 1.0) / 3.0)))
                 decryptedStrings += chr(temp)
-        
+
         if ifTrueDES.get():
             for item in stringList:
-                temp = round(math.pow(13, ((float)(math.asinh((float(item) - 31.0)/3.0) + 7.0)/13.0)))
-                decryptedStrings +=chr(int(temp))
-                print(temp)
+                temp = round(math.pow(13, (float(math.asinh((float(item) - 31.0) / 3.0) + 7.0) / 13.0)))
+                decryptedStrings += chr(int(temp))
 
         for char in decryptedStrings:
             file.write(char)
@@ -115,17 +125,24 @@ ifTrueAES = IntVar()
 ifTrueDES = IntVar()
 ifTrueRSA = IntVar()
 
+
 def reset23():
+    logging.info("changed the algorithm to AES")
     checkBox2.deselect()
     checkBox3.deselect()
+
 
 def reset21():
+    logging.info("changed the algorithm to RSA")
     checkBox2.deselect()
     checkBox1.deselect()
 
+
 def reset31():
+    logging.info("changed the algorithm to DES")
     checkBox3.deselect()
     checkBox1.deselect()
+
 
 checkBox1 = Checkbutton(algoFrame, text="AES(security level: 2)", command=reset23, variable=ifTrueAES)
 checkBox2 = Checkbutton(algoFrame, text="DES(security level: 3)", command=reset31, variable=ifTrueDES)
